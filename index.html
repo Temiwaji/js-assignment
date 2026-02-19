@@ -11,9 +11,15 @@
   <h1>JS Assignment</h1>
 
   <h2>Task 1: Multiply Numbers</h2>
-  <p>Multiply result of 2 × 3 × 4 = <strong>24</strong></p>
+  <p>Enter numbers separated by commas (e.g. 2, 3, 4) and click Multiply</p>
+  <input type="text" id="numbers" placeholder="e.g. 2, 3, 4" />
+  <button onclick="calculate()">Multiply</button>
+  <p>Result: <strong id="result"></strong></p>
 
   <h2>Task 2: API Chart</h2>
+  <p>Data fetched from: https://jsonplaceholder.typicode.com/users</p>
+  <p><strong>Bar Chart:</strong> Shows each user's full name (X-axis) against their User ID (Y-axis)</p>
+  <p><strong>Line Chart:</strong> Shows each User ID (X-axis) against the number of characters in their username (Y-axis)</p>
   <button onclick="loadBarChart()">Show Bar Chart</button>
   <button onclick="loadLineChart()">Show Line Chart</button>
 
@@ -28,7 +34,12 @@
       return result;
     }
 
-    console.log("Multiply result:", multiplyAll(2, 3, 4));
+    function calculate() {
+      const input = document.getElementById("numbers").value;
+      const nums = input.split(",").map(Number);
+      const answer = multiplyAll(...nums);
+      document.getElementById("result").textContent = answer;
+    }
 
     // ======= TASK 2 =======
     async function fetchUsers() {
@@ -46,7 +57,8 @@
       }));
 
       const surface = { name: 'Users Bar Chart', tab: 'Charts' };
-      tfvis.render.barchart(surface, data);
+      const opts = { xLabel: 'User Full Name', yLabel: 'User ID', yAxisDomain: [0, 10] };
+      tfvis.render.barchart(surface, data, opts);
     }
 
     async function loadLineChart() {
@@ -60,8 +72,8 @@
       const series = ['Username Length per User'];
       const data = { values: [values], series };
       const surface = { name: 'Users Line Chart', tab: 'Charts' };
-
-      tfvis.render.linechart(surface, data);
+      const opts = { xLabel: 'User ID', yLabel: 'Username Length', xAxisDomain: [0, 10], yAxisDomain: [0, 20] };
+      tfvis.render.linechart(surface, data, opts);
     }
 
   </script>
